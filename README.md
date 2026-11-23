@@ -1,6 +1,16 @@
 Para utilizar este template siga o tutorial disponível em: http://www.biblioteca.ufc.br/images/arquivos/instrucoes_modelos/tutorial_sharelatex.pdf
 
-# Útimas alterações
+# Últimas alterações
+23/11/2026
+    -Citações conforme ABNT NBR 10520:2023: autor pessoa física e jurídica em maiúsculas e minúsculas, et al. só a partir de quatro autores (opção abnt-etal-cite=3), obra sem autoria com [...], apud em itálico.
+    -Referências conforme ABNT NBR 6023:2025: letras a/b também na lista de referências (1927a, 1927b), hífen em intervalos de páginas (p. 51-60), entrada pelo título com artigo ou monossílabo e a palavra seguinte em maiúsculas (A FLOR prometida).
+    -Caixa alta das referências feita pelo LaTeX (\abntupper), o que corrige sobrenomes e instituições acentuados (GONÇALVES, ASSOCIAÇÃO) e iniciais acentuadas (É., Â.).
+    -Instituições escritas com author = {{Nome da Instituição}} vão para maiúsculas na lista de referências.
+    -Corrigido erro de compilação em \imprimirapendices e \imprimiranexos e o espaço após o traço em "APÊNDICE A – TÍTULO".
+    -Filete das notas de rodapé com 5 cm (ABNT NBR 14724:2024, 5.2.1).
+    -Indicativo de seção separado do título por um espaço (ABNT NBR 6024:2012).
+    -Caminho da errata corrigido no documento.tex.
+    -Arquivo de referências de exemplo atualizado e novo documento de teste (teste-normas.tex).
 22/07/2022
     -atualizações em todas as partes do template, visando adequar as novas normas da ABNT, conforme parecer emitido pela Comissão de Normalização do Sistema de Bibliotecas da UFC.
 
@@ -175,14 +185,13 @@ Veja a seguir como inserir alguns elementos no seu texto.
 \end{alineas}
 ```
 
-### Como criar Capítulos
-```tex
-\chapter{Fundamentação Teórica}
-\label{cap:fundamentacao-teorica}
-```
-
 ### Como criar Seções
+A ABNT NBR 14724:2024 (4.2.2) determina que o trabalho seja organizado em seções e não em capítulos. No modelo, a seção primária é criada com `\chapter`, que só gera o número e o título (por exemplo, "1 INTRODUÇÃO"), sem a palavra "Capítulo".
 ```tex
+% Seção Primária
+\chapter{Fundamentação Teórica}
+\label{sec:fundamentacao-teorica}
+
 % Seções Secundárias
 \section{Objetivo Geral 2}
 \label{sec:objetivo-geral-2}
@@ -222,6 +231,16 @@ Veja a seguir como inserir alguns elementos no seu texto.
 ```
 
 ### Como inserir referências
+
+Regras do arquivo .bib para o estilo atualizado (ABNT NBR 6023:2025 e NBR 10520:2023):
+
+ - Escreva os nomes em caixa normal, no formato Sobrenome, Prenome: `author = {Gonçalves, Érica and Silva, José}`. O estilo coloca os sobrenomes em maiúsculas na lista de referências e mantém maiúsculas e minúsculas na citação: (Gonçalves; Silva, 2022).
+ - Sobrenome composto com hífen ou que começa com letra acentuada, quando houver mais de uma palavra, vai entre chaves: `author = {{Ângelo-Ítalo}, Jean-Paul}`.
+ - Instituição como autor vai entre chaves duplas, em caixa normal: `author = {{Organização Mundial da Saúde}}`.
+ - Órgão de jurisdição (Estado, Município): `organization = {São Paulo \NoCaseChange{(Estado). Secretaria do Meio Ambiente}}` e `org-short = {São Paulo}`. Na lista sai "SÃO PAULO (Estado). Secretaria do Meio Ambiente." e no texto "(São Paulo, 1999)".
+ - Obra sem autoria: deixe `author` vazio. A entrada usa a primeira palavra do título, ou o artigo ou monossílabo e a palavra seguinte: "ANTEPROJETO de lei", "(Anteprojeto [...], 1987)".
+ - Para conferir o estilo depois de qualquer mudança em `lib/`, compile o `teste-normas.tex`, que exercita todos esses casos.
+
 
 @article{article,
   author  = {Peter Adams}, 
