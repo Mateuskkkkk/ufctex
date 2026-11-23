@@ -11,6 +11,10 @@ Para utilizar este template siga o tutorial disponível em: http://www.bibliotec
     -Indicativo de seção separado do título por um espaço (ABNT NBR 6024:2012).
     -Caminho da errata corrigido no documento.tex.
     -Arquivo de referências de exemplo atualizado e novo documento de teste (teste-normas.tex).
+    -Lista de referências ordenada sem considerar acentos (ÁVILA entre ASSOCIAÇÃO e BRASIL; antes ia para o fim).
+    -Pacote float carregado depois do ufcTex.sty: [H] fixa figuras, tabelas e quadros no ponto do texto.
+    -Capa sem linha vazia quando o campus não tem centro ou departamento (\\departamento{} vazio gerava erro).
+    -latexmkrc que roda o makeglossaries: basta latexmk documento.tex (o Overleaf também usa este arquivo).
 22/07/2022
     -atualizações em todas as partes do template, visando adequar as novas normas da ABNT, conforme parecer emitido pela Comissão de Normalização do Sistema de Bibliotecas da UFC.
 

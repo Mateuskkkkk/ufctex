@@ -161,6 +161,12 @@ def limpar(pasta):
         "% Tradução do resumo, com o mesmo conteúdo.\n\n"
         "Abstract text.\n\n\\keywords{keyword; keyword; keyword.}\n", encoding="utf-8")
 
+    # Siglas e símbolos de exemplo ficam comentados, como modelo de sintaxe
+    for nome, padrao in (("lista-de-abreviaturas-e-siglas.tex", r"^(\s*)(\\newacronym)"),
+                         ("lista-de-simbolos.tex", r"^(\s*)(\\item\[)")):
+        f = pre / nome
+        f.write_text(re.sub(padrao, r"\1% \2", f.read_text(encoding="utf-8"), flags=re.M), encoding="utf-8")
+
     doc = pasta / "documento.tex"
     tex = doc.read_text(encoding="utf-8")
     # Capítulos do esqueleto
@@ -170,8 +176,9 @@ def limpar(pasta):
     tex = re.sub(r"^(\s*)(\\input\{3-pos-textuais/(?:apendices|anexos)/[^}]+\})", r"\1% \2", tex, flags=re.M)
     tex = re.sub(r"^(\s*)(\\imprimir(?:apendices|anexos))\s*$", r"\1% \2", tex, flags=re.M)
     # Elementos opcionais: ficam comentados até o autor escrever
-    for cmd in ("imprimirdedicatoria", "imprimiragradecimentos", "imprimirepigrafe",
-                "imprimirlistadeilustracoes", "imprimirlistadetabelas", "imprimirlistadesimbolos"):
+    for cmd in ("imprimirfichacatalografica", "imprimirdedicatoria", "imprimiragradecimentos", "imprimirepigrafe",
+                "imprimirlistadeilustracoes", "imprimirlistadetabelas", "imprimirlistadesimbolos",
+                "imprimirlistadeabreviaturasesiglas"):
         tex = re.sub(r"^(\s*)(\\" + cmd + r"\b)", r"\1% \2", tex, flags=re.M)
     tex = tex.replace("\\renewcommand*\\listfigurename{Lista de Figuras}", "% \\renewcommand*\\listfigurename{Lista de Figuras}")
     doc.write_text(tex, encoding="utf-8")

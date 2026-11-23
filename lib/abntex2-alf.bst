@@ -2113,8 +2113,31 @@ FUNCTION {unpublished}
 
 FUNCTION {default.type} { misc }
 READ
+%ufcTex 2026: ordenação da lista sem acentos. O BibTeX compara bytes, e as
+%letras acentuadas em UTF-8 iam para o fim (ÁVILA depois de ZÉ, SÃO PAULO
+%depois de SOUZA).
+STRINGS { fold.s fold.out fold.c }
+INTEGERS { fold.pos fold.n }
+FUNCTION {ascii.fold}
+{ 'fold.s :=
+  "" 'fold.out :=
+  #1 'fold.pos :=
+  { fold.s fold.pos #1 substring$ "" = not }
+  { fold.s fold.pos #1 substring$ chr.to.int$ #191 >
+      { fold.s fold.pos #2 substring$ 'fold.c := #2 'fold.n := }
+      { fold.s fold.pos #1 substring$ 'fold.c := #1 'fold.n := }
+    if$
+    fold.out
+    fold.c "á" = fold.c "à" = or fold.c "â" = or fold.c "ã" = or fold.c "ä" = or fold.c "Á" = or fold.c "À" = or fold.c "Â" = or fold.c "Ã" = or fold.c "Ä" = or { "a" } { fold.c "é" = fold.c "è" = or fold.c "ê" = or fold.c "ë" = or fold.c "É" = or fold.c "È" = or fold.c "Ê" = or fold.c "Ë" = or { "e" } { fold.c "í" = fold.c "ì" = or fold.c "î" = or fold.c "ï" = or fold.c "Í" = or fold.c "Ì" = or fold.c "Î" = or fold.c "Ï" = or { "i" } { fold.c "ó" = fold.c "ò" = or fold.c "ô" = or fold.c "õ" = or fold.c "ö" = or fold.c "Ó" = or fold.c "Ò" = or fold.c "Ô" = or fold.c "Õ" = or fold.c "Ö" = or { "o" } { fold.c "ú" = fold.c "ù" = or fold.c "û" = or fold.c "ü" = or fold.c "Ú" = or fold.c "Ù" = or fold.c "Û" = or fold.c "Ü" = or { "u" } { fold.c "ç" = fold.c "Ç" = or { "c" } { fold.c "ñ" = fold.c "Ñ" = or { "n" } { fold.c } if$ } if$ } if$ } if$ } if$ } if$ } if$
+    * 'fold.out :=
+    fold.pos fold.n + 'fold.pos :=
+  }
+  while$
+  fold.out
+}
 FUNCTION {sortify}
-{ purify$
+{ ascii.fold
+  purify$
   "l" change.case$
 }
 INTEGERS { len }
