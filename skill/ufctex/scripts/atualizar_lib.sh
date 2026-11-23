@@ -17,6 +17,16 @@ for f in abntex2.cls abntex2-alf.bst ufcTex.sty ufcTexcite.sty; do
 done
 # preambulo.tex costuma ter ajustes do autor (fonte Arial, pacotes): só troca a opção de et al.
 sed -i.bak 's/abnt-etal-cite=2/abnt-etal-cite=3/' "$DIR/lib/preambulo.tex" && rm -f "$DIR/lib/preambulo.tex.bak"
+# [H] (pacote float), carregado depois do ufcTex.sty, que cria o ambiente quadro
+if ! grep -qE '^[^%]*\\usepackage\{float\}' "$DIR/lib/preambulo.tex"; then
+  python3 - "$DIR/lib/preambulo.tex" <<'PY'
+import re, sys
+p = sys.argv[1]; s = open(p, encoding="utf-8").read()
+s = re.sub(r"^(\\usepackage\{lib/ufcTex\}[^\n]*\n)",
+           r"\1\\usepackage{float}             % [H] (ufcTex 2026)\n", s, count=1, flags=re.M)
+open(p, "w", encoding="utf-8").write(s)
+PY
+fi
 [ -f "$DIR/latexmkrc" ] || cp "$TMP/novo/latexmkrc" "$DIR/latexmkrc"
 echo "lib/ atualizado. Cópia do anterior em $DIR/lib-antigo-$STAMP (apague depois de conferir o PDF)."
-echo "Arquivos trocados: abntex2.cls, abntex2-alf.bst, ufcTex.sty, ufcTexcite.sty; preambulo.tex com abnt-etal-cite=3."
+echo "Arquivos trocados: abntex2.cls, abntex2-alf.bst, ufcTex.sty, ufcTexcite.sty; preambulo.tex com abnt-etal-cite=3 e pacote float."

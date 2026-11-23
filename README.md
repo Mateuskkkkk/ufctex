@@ -79,6 +79,25 @@ Para utilizar este template siga o tutorial disponível em: http://www.bibliotec
     - Acrescentado novo colaborador da biblioteca central.
     - Problema com espaço apos hifem resolvido provisoriamente.
 
+# ufcTex 2026 e a skill para o Claude
+
+Este repositório tem duas partes:
+
+ - **O modelo LaTeX** (raiz do repositório): o ufcTex da Biblioteca Universitária da UFC, atualizado em 2026 para a ABNT NBR 14724:2024, NBR 10520:2023 e NBR 6023:2025. Pode ser usado sozinho, no Overleaf (New Project > Upload Project, com o zip do repositório) ou numa instalação local (`latexmk documento.tex`).
+ - **A skill `ufctex`** (pasta `skill/ufctex`): instruções e scripts que fazem o Claude criar um trabalho novo a partir do modelo, migrar um trabalho do Word, formatar figuras, tabelas e referências, e auditar a conformidade com as normas e os guias da UFC.
+
+## Instalar a skill no Claude
+
+1. Baixe `ufctex-skill.zip` na página de Releases do repositório (ou compacte a pasta `skill/ufctex`, de modo que o zip tenha a pasta `ufctex/` no nível de cima).
+2. No Claude, abra Customize > Skills, clique em "+", depois "Create skill" e "Upload a skill", e envie o zip.
+3. Peça, por exemplo: "crie meu TCC de Engenharia Civil no modelo da UFC", "passe meu TCC do Word para o modelo da UFC" ou "audite meu TCC nas normas da ABNT".
+
+A skill precisa da execução de código ativada. Ela baixa o modelo deste repositório quando cria um trabalho novo.
+
+## Conferir o estilo
+
+`teste-normas.tex` exercita as regras de citação e referência que o estilo implementa (um a quatro autores, instituição, jurisdição, obra sem autoria, mesmo autor e ano, apud, nomes acentuados, ordenação). Compile-o depois de qualquer mudança em `lib/` e compare com a versão anterior.
+
 # O que é?
 
 O **ufctex** é um projeto adaptado do [abnTeX2] da Associação Brasileira de normas técnicas [ueceTeX] da Universidade Estadual do Ceará. Essa versão, foi criada para o desenvolvimento de trabalhos acadêmicos de acordo com as normas da Universidade Federal do Ceará. Este template deve ser utilizado online de qualquer computador ou sistema operacional sem a necessidade de instalação e foi disponibilizada no OverLeaf. Entretanto, é possível baixar o template e trabalhar offline também. 
