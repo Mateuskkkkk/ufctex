@@ -576,8 +576,8 @@
         \includegraphics[scale=0.10]{lib/logo-ufc} \\
         \vspace{-0.4cm}
 		\MakeUppercase{\imprimiries} \\
-		\MakeUppercase{\imprimircentro} \\
-		\MakeUppercase{\imprimirdepartamento} \\
+		\ifthenelse{\equal{\imprimircentro}{}}{}{\MakeUppercase{\imprimircentro} \\}
+		\ifthenelse{\equal{\imprimirdepartamento}{}}{}{\MakeUppercase{\imprimirdepartamento} \\}% ufcTex 2026: linha omitida quando não há departamento (ex.: campi do interior)
 		\abntex@ifnotempty{\imprimirprogramadoutorado}{
 			\MakeUppercase{\imprimirprogramadoutorado} \\
 		}		
@@ -609,8 +609,8 @@
         \includegraphics[scale=0.10]{lib/logo-ufc} \\
         \vspace{-0.4cm}
 		\MakeUppercase{\imprimiries} \\
-		\MakeUppercase{\imprimircentro} \\
-		\MakeUppercase{\imprimirdepartamento} \\
+		\ifthenelse{\equal{\imprimircentro}{}}{}{\MakeUppercase{\imprimircentro} \\}
+		\ifthenelse{\equal{\imprimirdepartamento}{}}{}{\MakeUppercase{\imprimirdepartamento} \\}% ufcTex 2026: linha omitida quando não há departamento (ex.: campi do interior)
 		\abntex@ifnotempty{\imprimirprogramamestrado}{
 			\MakeUppercase{\imprimirprogramamestrado} \\
 		}		
@@ -642,8 +642,8 @@
         \includegraphics[scale=0.10]{lib/logo-ufc} \\
         \vspace{-0.4cm}
 		\MakeUppercase{\imprimiries} \\
-		\MakeUppercase{\imprimircentro} \\
-		\MakeUppercase{\imprimirdepartamento} \\
+		\ifthenelse{\equal{\imprimircentro}{}}{}{\MakeUppercase{\imprimircentro} \\}
+		\ifthenelse{\equal{\imprimirdepartamento}{}}{}{\MakeUppercase{\imprimirdepartamento} \\}% ufcTex 2026: linha omitida quando não há departamento (ex.: campi do interior)
 		\MakeUppercase{Curso de #1 em \imprimirgraduacaoem} \\
 
 		\vspace{\onelineskip}
