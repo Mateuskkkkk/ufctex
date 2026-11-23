@@ -7,7 +7,7 @@ description: 'Padroniza TCC, monografia, dissertação e tese da UFC nas normas 
 
 O ufcTex é o modelo LaTeX da Biblioteca Universitária da UFC, derivado do abnTeX2. Esta skill usa a versão atualizada em 2026 (repositório https://github.com/Mateuskkkkk/ufctex), que segue a NBR 14724:2024, a NBR 10520:2023 e a NBR 6023:2025. O modelo já aplica a formatação; o trabalho de Claude é pôr o conteúdo do autor nos comandos certos, manter as referências corretas e conferir o resultado contra as normas.
 
-Caminho dos scripts e guias: a pasta desta skill (`<skill>` abaixo). Se ela não tiver `scripts/` e `references/` (skill salva só com este arquivo), baixe o repositório e use a pasta da skill de lá:
+Caminho dos scripts e guias: a pasta desta skill (`<skill>` abaixo). Se faltar nela algum arquivo citado aqui (por exemplo, skill salva só com este SKILL.md, ou cópia antiga sem `scripts/auditar.py`), baixe o repositório e use a pasta da skill de lá:
 
 ```bash
 git clone --depth 1 https://github.com/Mateuskkkkk/ufctex /tmp/ufctex-repo
