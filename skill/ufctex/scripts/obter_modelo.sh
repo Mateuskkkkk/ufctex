@@ -35,7 +35,7 @@ fi
 
 mkdir -p "$DEST"
 # Tudo do modelo, menos a skill, o histórico Git e os arquivos de teste do estilo.
-( cd "$SRC" && tar cf - --exclude=./skill --exclude=./.git --exclude=./.github \
+( cd "$SRC" && tar cf - --exclude=./skill --exclude=./dist --exclude=./.git --exclude=./.github \
     --exclude='./teste-normas.*' --exclude='*.pdf' \
     --exclude='*.aux' --exclude='*.log' --exclude='*.bbl' --exclude='*.blg' --exclude='*.toc' \
     --exclude='*.lof' --exclude='*.lot' --exclude='*.loq' --exclude='*.out' --exclude='*.glo' \

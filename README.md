@@ -88,7 +88,7 @@ Este repositório tem duas partes:
 
 ## Instalar a skill no Claude
 
-1. Baixe `ufctex-skill.zip` na página de Releases do repositório (ou compacte a pasta `skill/ufctex`, de modo que o zip tenha a pasta `ufctex/` no nível de cima).
+1. Baixe o [ufctex-skill.zip](https://github.com/Mateuskkkkk/ufctex/raw/main/dist/ufctex-skill.zip) (pasta `dist/`). Quem mudar a skill deve gerar o zip de novo a partir de `skill/`: `cd skill && zip -r ../dist/ufctex-skill.zip ufctex`, para que o zip tenha a pasta `ufctex/` no nível de cima.
 2. No Claude, abra Customize > Skills, clique em "+", depois "Create skill" e "Upload a skill", e envie o zip.
 3. Peça, por exemplo: "crie meu TCC de Engenharia Civil no modelo da UFC", "passe meu TCC do Word para o modelo da UFC" ou "audite meu TCC nas normas da ABNT".
 
