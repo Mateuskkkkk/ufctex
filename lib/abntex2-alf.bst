@@ -252,6 +252,74 @@ FUNCTION {bbl.edby} { "editado por" }
 FUNCTION {bbl.edition} { "ed." }
 FUNCTION {bbl.empty} {""}
 FUNCTION {bbl.etal}{abnt.etal.text "" = {""} {" " abnt.etal.text *} if$}
+
+%ufcTex 2026: caixa alta feita pelo LaTeX (\abntupper = \MakeUppercase),
+%porque o change.case$ do BibTeX nao converte letras acentuadas em UTF-8.
+INTEGERS { sorting.mode }
+FUNCTION {upper.tex}
+{ sorting.mode
+    'skip$
+    { duplicate$ empty$ 'skip$ { "\abntupper{" swap$ * "}" * } if$ }
+  if$
+}
+
+%ufcTex 2026: palavras iniciais do titulo usadas como entrada (NBR 6023:2025,
+%NBR 10520:2023 6.1.1.4). Se o titulo comeca por artigo ou monossilabo,
+%a entrada e formada por ele e pela palavra seguinte.
+STRINGS { fw.s fw.c fw.word lead.str rest.str }
+INTEGERS { fw.pos fw.depth fw.end lead.len }
+FUNCTION {find.word.end}
+{ 'fw.pos := 'fw.s :=
+  #0 'fw.depth := #0 'fw.end :=
+  { fw.end #0 = }
+  { fw.s fw.pos #1 substring$ 'fw.c :=
+    fw.c "" =
+      { fw.pos 'fw.end := }
+      { fw.c "{" = { fw.depth #1 + 'fw.depth := } 'skip$ if$
+        fw.c "}" = { fw.depth #1 - 'fw.depth := } 'skip$ if$
+        fw.c " " = fw.depth #0 = and
+          { fw.pos 'fw.end := }
+          { fw.pos #1 + 'fw.pos := }
+        if$ }
+    if$ }
+  while$
+  fw.end
+}
+FUNCTION {is.lead.article}
+{ "l" change.case$ 'fw.word :=
+  fw.word "o" = fw.word "a" = or fw.word "os" = or fw.word "as" = or
+  fw.word "um" = or fw.word "uma" = or fw.word "uns" = or fw.word "umas" = or
+  fw.word "no" = or fw.word "na" = or fw.word "nos" = or fw.word "nas" = or
+  fw.word "do" = or fw.word "da" = or fw.word "dos" = or fw.word "das" = or
+  fw.word "ao" = or fw.word "aos" = or fw.word "\`a" = or fw.word "\`as" = or
+  fw.word "à" = or fw.word "às" = or fw.word "À" = or fw.word "Às" = or
+  fw.word "em" = or fw.word "de" = or fw.word "por" = or fw.word "com" = or
+  fw.word "sem" = or fw.word "sob" = or fw.word "e" = or fw.word "se" = or
+  fw.word "the" = or fw.word "an" = or fw.word "el" = or fw.word "la" = or
+  fw.word "los" = or fw.word "las" = or fw.word "le" = or fw.word "les" = or
+  fw.word "un" = or fw.word "une" = or fw.word "il" = or fw.word "lo" = or
+  fw.word "der" = or fw.word "die" = or fw.word "das" = or
+}
+FUNCTION {lead.split}
+{ 's :=
+  s #1 find.word.end 'lead.len :=
+  s #1 lead.len #1 - substring$ 'lead.str :=
+  lead.str is.lead.article
+  s lead.len #1 substring$ "" = not and
+    { s lead.len #1 + find.word.end 'lead.len :=
+      s #1 lead.len #1 - substring$ 'lead.str := }
+    'skip$
+  if$
+  s lead.len global.max$ substring$ 'rest.str :=
+}
+FUNCTION {strip.trailing.punct}
+{ 's :=
+  { s #-1 #1 substring$ "," = s #-1 #1 substring$ ":" = or
+    s #-1 #1 substring$ ";" = or s #-1 #1 substring$ "." = or }
+  { s #1 s text.length$ #1 - substring$ 's := }
+  while$
+  s
+}
 FUNCTION {bbl.doi.url} {"http://dx.doi.org/"}
 FUNCTION {bbl.in}{ "In" iso.abbreviation 'skip$ { bbl.colon *} if$}
 FUNCTION {bbl.ldots} %#0 use nothing, #1 use \ldots, #2 use $\ldots$, 3# use {...}
@@ -468,11 +536,66 @@ FUNCTION {recompose.name}
    }
 
 
+
+%ufcTex 2026: iniciais dos prenomes que respeitam UTF-8 (Érica -> É.).
+%O "{f.}" do BibTeX corta o primeiro caractere acentuado ao meio.
+STRINGS { ini.s ini.out ini.c }
+INTEGERS { ini.pos ini.start ini.depth ini.b ini.n }
+FUNCTION {utf8.len}
+{ chr.to.int$ 'ini.b :=
+  ini.b #239 >
+    { #4 }
+    { ini.b #223 > { #3 } { ini.b #191 > { #2 } { #1 } if$ } if$ }
+  if$
+}
+FUNCTION {make.initials}
+{ 'ini.s :=
+  "" 'ini.out :=
+  #1 'ini.pos :=
+  #1 'ini.start :=
+  { ini.s ini.pos #1 substring$ "" = not }
+  { ini.s ini.pos #1 substring$ 'ini.c :=
+    ini.start
+      { ini.c "{" =
+          { %copia o grupo entre chaves inteiro: {\'E}rica -> {\'E}.
+            #0 'ini.depth :=
+            #1 'ini.n :=
+            { ini.n }
+            { ini.s ini.pos #1 substring$ 'ini.c :=
+              ini.out ini.c * 'ini.out :=
+              ini.c "{" = { ini.depth #1 + 'ini.depth := } 'skip$ if$
+              ini.c "}" = { ini.depth #1 - 'ini.depth := } 'skip$ if$
+              ini.pos #1 + 'ini.pos :=
+              ini.depth #0 = ini.s ini.pos #1 substring$ "" = or { #0 'ini.n := } 'skip$ if$ }
+            while$
+            ini.out "." * 'ini.out :=
+            #0 'ini.start := }
+          { ini.c " " = ini.c "~" = or
+              { ini.pos #1 + 'ini.pos := }
+              { ini.c utf8.len 'ini.n :=
+                ini.out ini.s ini.pos ini.n substring$ * "." * 'ini.out :=
+                ini.pos ini.n + 'ini.pos :=
+                #0 'ini.start := }
+            if$ }
+        if$ }
+      { ini.c " " = ini.c "~" =  or
+          { ini.out " " * 'ini.out := #1 'ini.start := }
+          { ini.c "-" =
+              { ini.out "-" * 'ini.out := #1 'ini.start := }
+              'skip$
+            if$ }
+        if$
+        ini.pos #1 + 'ini.pos := }
+    if$ }
+  while$
+  ini.out
+}
+
 FUNCTION {format.single.name}
 {
 s nameptr get.person 'r :=
 abnt.last.names
-  {r #1 "{ll}{ jj}" format.name$ "u" change.case$
+  {r #1 "{ll}{ jj}" format.name$ upper.tex
    abnt.full.initials
     {r #1 "{, ff}{ vv}" format.name$ *}
     {r #1 "{, f.}{ vv}" format.name$ *}
@@ -480,16 +603,21 @@ abnt.last.names
   {%r #1 is.composed.von {r #1 recompose.name 'r :=} 'skip$ if$
    r #1 "{ll}" format.name$
    #1 "{ll}" format.name$
-   r #1 "{ jj}" format.name$ * "u" change.case$
+   r #1 "{ jj}" format.name$ * upper.tex
    abnt.full.initials
     {r #1 "{, ff}{ vv}" format.name$ *
      r #1 "{ll}" format.name$
      #1 "{ ff}{ vv}" format.name$ *}
     {iso.author.punctuation
       {r #1 "{, f{}}{ vv}" format.name$ *}
-      {r #1 "{, f.}{ vv}" format.name$ *} if$
+      {r #1 "{ff}" format.name$ make.initials
+       duplicate$ empty$ 'skip$ {", " swap$ *} if$ *
+       r #1 "{ vv}" format.name$ *} if$
      r #1 "{ll}" format.name$
-     #1 "{ f.}{ vv}" format.name$ *}
+     #1 "{ff}" format.name$ make.initials
+     duplicate$ empty$ 'skip$ {" " swap$ *} if$ *
+     r #1 "{ll}" format.name$
+     #1 "{ vv}" format.name$ *}
   if$}
 
 if$
@@ -657,7 +785,7 @@ FUNCTION {format.howpublished}
 %For example: Fun{\c c}\ão (Função) is a whole word but contains a
 %space, but if we write Fun\c{c}\ão \c is converted to uppercase...
 %You get the problem, don't you?
-FUNCTION {format.title.as.author}
+FUNCTION {format.title.as.author.journalpart}
 { 's := %holds the title
   #1 'title.pos := %our position in the title
   #1 'first.word := %boolean, true if we already have the first word
@@ -675,7 +803,7 @@ FUNCTION {format.title.as.author}
 	{title.char " " =}
       if$ s t = or no.bracket and
        {#0 'first.word :=
-       t title.char * "u" change.case$
+       t title.char * upper.tex
        title.pos #1 + 'title.pos :=
        s title.pos global.max$ substring$ * 's :=}
        {title.pos #1 + 'title.pos := t title.char * 't :=}
@@ -685,6 +813,16 @@ FUNCTION {format.title.as.author}
 s
 }
 
+
+
+%ufcTex 2026: obra sem autoria entra pelo titulo, com a primeira palavra
+%(ou artigo/monossilabo e a palavra seguinte) em maiusculas.
+FUNCTION {format.title.as.author}
+{ type$ "journalpart" =
+    { format.title.as.author.journalpart }
+    { lead.split lead.str upper.tex rest.str * }
+  if$
+}
 
 %compares current title with the title of the previous entry
 FUNCTION {compare.title}
@@ -718,22 +856,14 @@ FUNCTION {format.title}
 }
 
 FUNCTION {n.dashify}
-{
-  't :=
+{ 't :=
   ""
     { t empty$ not }
     { t #1 #1 substring$ "-" =
-        { t #1 #2 substring$ "--" = not
-            { "--" *
-              t #2 global.max$ substring$ 't :=
-            }
-            {   { t #1 #1 substring$ "-" = }
-                { "-" *
-                  t #2 global.max$ substring$ 't :=
-                }
-              while$
-            }
-          if$
+        { "-" *
+          { t #1 #1 substring$ "-" = }
+            { t #2 global.max$ substring$ 't := }
+          while$
         }
         { t #1 #1 substring$ *
           t #2 global.max$ substring$ 't :=
@@ -758,8 +888,8 @@ FUNCTION {format.date}
 	{ "existe o campo month (mês) mas não o campo year (ano) em " cite$ * warning$ month}
       if$}
     { month empty$
-	{ year n.dashify}
-	{ month " " * year * }
+	{ year n.dashify extra.label *}
+	{ month " " * year * extra.label * }
       if$}
   if$
 }
@@ -1062,7 +1192,7 @@ FUNCTION {format.editors}
 FUNCTION {format.in.ed.booktitle}
 { editor empty$
     {organization empty$ not author empty$ not and    %if one of two not empty
-      {word.in organization "u" change.case$ * output
+      {word.in organization upper.tex * output
        format.conference.info
        booktitle empty$ {""} {new.sentence format.booktitle} if$}
       {word.in
@@ -1099,7 +1229,7 @@ FUNCTION {format.year}
    { "campo year vazio ou faltando em " cite$ *
     abnt.missing.year {" (vou colocar [s.d.])" *} 'skip$ if$ warning$
     abnt.missing.year {", " } {""} if$ bbl.missing.year *}
-    {year n.dashify "year" bibinfo.check}
+    {year n.dashify extra.label * "year" bibinfo.check}
 if$
 }
 
@@ -1164,7 +1294,7 @@ FUNCTION {compare.authorship}
 FUNCTION {format.author.or.organization}
 {  author empty$
     { organization empty$ 'skip$
-      { organization "u" change.case$ "organization"  bibinfo.check output}
+      { organization upper.tex "organization"  bibinfo.check output}
       if$}
     { format.authors output.nonnull }
   if$
@@ -1175,7 +1305,7 @@ FUNCTION {format.author.or.organization}
 FUNCTION {format.editor.or.organization}
 {  editor empty$
     { organization empty$ 'skip$
-      { organization "u" change.case$ "organization"  bibinfo.check output}
+      { organization upper.tex "organization"  bibinfo.check output}
       if$}
     { format.editors output.nonnull }
   if$
@@ -1187,7 +1317,7 @@ FUNCTION {format.author.or.editor.or.organization}
     { editor empty$
         { organization empty$
 	    'skip$
-            { organization "u" change.case$ "organization"  bibinfo.check output}
+            { organization upper.tex "organization"  bibinfo.check output}
           if$}
         { format.editors output.nonnull }
       if$}
@@ -1201,7 +1331,7 @@ FUNCTION {format.organization.estado}
     { editor empty$
         { organization empty$
 	    'skip$
-            { organization "urrul" change.case$ "organization"  bibinfo.check output}
+            { organization upper.tex "organization"  bibinfo.check output}
           if$}
         { format.editors output.nonnull }
       if$}
@@ -1270,7 +1400,7 @@ FUNCTION {format.names.for.label2} %abnt-alf only
        {s nameptr "{ll}" format.name$ #1 "{ll}" format.name$
         s nameptr "{ jj}" format.name$ *}
      if$
-     abnt.cite.style #0 = {"u" change.case$} 'skip$ if$ 't :=
+     abnt.cite.style #0 = {upper.tex} 'skip$ if$ 't :=
       nameptr #1 >
         {namesleft #1 >
             { numnames abnt.etal.cite > 
@@ -1290,25 +1420,12 @@ FUNCTION {format.names.for.label2} %abnt-alf only
 }
 
 FUNCTION {format.title.for.label}
-{  's :=
-  #1 'title.pos :=   #1 'first.word :=
-  "" 't :=
-  {first.word}
-    {s title.pos #1 substring$ 'title.char :=
-        title.char "." = title.char ":" = or title.char ";" = or
-	title.char "," = or title.char " " = or s t = or
-       {#0 'first.word :=
-       title.pos #1 + 'title.pos :=}
-       {title.pos #1 + 'title.pos := t title.char * 't :=}
-     if$
-     }
-  while$
-s t = %title equals first word, dont use bbl.ldots
-  {t  "}{" * t
-  abnt.cite.style #0 = {"u" change.case$ * } 'skip$ if$}
-  {t bbl.ldots * "}{" * t
-  abnt.cite.style #0 = {"u" change.case$} 'skip$ if$ * bbl.ldots *}
-if$
+{ lead.split
+  lead.str strip.trailing.punct 't :=
+  rest.str "" =
+    {t "}{" * t abnt.cite.style #0 = {upper.tex} 'skip$ if$ *}
+    {t " [...]" * "}{" * t abnt.cite.style #0 = {upper.tex} 'skip$ if$ * " [...]" *}
+  if$
 }
 
 %cvs keys have the general form $key: value $
@@ -1343,9 +1460,9 @@ FUNCTION {calc.extended.label}
     {editor empty$ not
      {editor format.names.for.label1 * "}{" *  editor format.names.for.label2 *}
      {org-short empty$ not
-      {org-short * "}{" * org-short "u" change.case$ *}
+      {org-short * "}{" * org-short abnt.cite.style #0 = {upper.tex} 'skip$ if$ *}
       {organization empty$ not
-       {organization * "}{" * organization "u" change.case$ *}
+       {organization * "}{" * organization abnt.cite.style #0 = {upper.tex} 'skip$ if$ *}
         {title empty$ not
          {title format.title.for.label *}
          {"nada}{NADA" *}
@@ -2071,12 +2188,13 @@ if$
 }
 
 FUNCTION {presort}
-{ 
+{ #1 'sorting.mode :=
  any.sort
   "    " * year field.or.null sortify * "    " * title field.or.null
   sort.format.title * #1 entry.max$ substring$
   %for non-alpha style we drop a void sort.key such that SORT has no effect
   abnt.alf 'skip$ {pop$ ""} if$ 'sort.key$ :=
+  #0 'sorting.mode :=
   year empty$ {""} {year} if$ 'year.label :=
   calc.extended.label
 }

@@ -1,0 +1,29 @@
+% Documento de teste do ufcTex: exercita as regras da NBR 10520:2023 e da
+% NBR 6023:2025 que o estilo implementa. Compile com:
+% pdflatex teste-normas; bibtex teste-normas; makeglossaries teste-normas;
+% pdflatex teste-normas; pdflatex teste-normas
+\documentclass[a4paper,12pt,chapter=TITLE,section=Title,subsection=Title,oneside,english,spanish,brazil]{lib/abntex2}
+\input{lib/preambulo}
+\trabalhoacademico{tccgraduacao}
+\begin{document}
+\textual
+\chapter{Teste de citações}
+\begin{alineas}
+\item um autor: \cite{um}; \citeonline{um}; \cite[p.~5]{um};
+\item dois autores: \cite{dois}; \citeonline{dois};
+\item três autores: \cite{tres}; \citeonline{tres};
+\item quatro autores: \cite{quatro}; \citeonline{quatro};
+\item nomes com acento: \cite{acento};
+\item instituição: \cite{inst}; \citeonline{inst}; sigla \cite{sigla};
+\item jurisdição: \cite{gov}; \citeonline{gov};
+\item campo organization: \cite{org}; \citeonline{org};
+\item sem autoria: \cite{semautor}; \cite{artigo}; \cite{umapalavra};
+\item mesmo autor e ano: \cite{reeA}; \cite{reeB};
+\item várias obras: \cite{um,tres,inst};
+\item apud: \apud[p.~55]{cag}{sua}; \apudonline{cag}{sua};
+\item grifo: \cite[p.~5, grifo nosso]{um}.
+\end{alineas}
+Nota de rodapé para medir o filete\footnote{Nota de rodapé longa para conferir o alinhamento da segunda linha da nota e o comprimento do filete, que deve ser de 5 cm.}.
+\nocite{online,art,diss}
+\bibliography{teste-normas}
+\end{document}

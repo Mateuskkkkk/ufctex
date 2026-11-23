@@ -1299,7 +1299,10 @@
      }%
 }
 
-\newcommand{\apudname}{apud}
+\newcommand{\apudname}{\textit{apud}}% NBR 10520:2023 e guia UFC: apud em italico
+% ufcTex 2026: caixa alta das entradas de referencia feita pelo LaTeX
+% (o BibTeX nao converte letras acentuadas em UTF-8).
+\providecommand{\abntupper}[1]{\MakeUppercase{#1}}
 \newcommand{\Idemname}{Id.}
 \newcommand{\Ibidemname}{Ibid.}
 \newcommand{\opcitname}{op.\ cit.}
