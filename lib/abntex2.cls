@@ -401,7 +401,7 @@
 \newcommand{\tocpartanexos}{}
 
 % insere o hifen no anexo/apendice do toc
-\cftinsertcode{A}{\renewcommand{\cftchapteraftersnum}{\hspace{3pt}\textendash\hspace{8pt}}}
+\cftinsertcode{A}{\renewcommand{\cftchapteraftersnum}{\space\textendash\space}}
 
 
 % No caso de Sumario (TOC) tradicional

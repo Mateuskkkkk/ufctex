@@ -1,4 +1,15 @@
 % Exemplos de referências podem ser encontrados em: https://verbosus.com/bibtex-style-examples.html
+%
+% ufcTex 2026 (NBR 6023:2025 e NBR 10520:2023):
+% - Escreva os nomes em caixa normal, no formato Sobrenome, Prenome:
+%   author = {Gonçalves, Érica}. O estilo coloca o sobrenome em maiúsculas.
+% - Sobrenome composto com hífen ou iniciado por letra acentuada vai entre chaves:
+%   author = {{Ângelo-Ítalo}, Jean-Paul}.
+% - Instituição como autor vai entre chaves duplas, em caixa normal:
+%   author = {{Organização Mundial da Saúde}}. Cita como (Organização Mundial da Saúde, 2010).
+% - Órgão de jurisdição (Estado, Município): use organization para a entrada da
+%   referência e org-short para a chamada no texto, e proteja o que não vai para
+%   maiúsculas com \NoCaseChange. Veja os exemplos secretaria1999 e manuais1989.
 
 @article{lamport1986latex,
     title={LaTEX: User's Guide \& Reference Manual},
@@ -39,7 +50,7 @@
 }
 
 @MASTERSTHESIS{Almeida2018,
-	author = {ALMEIDA, M. M. R.},
+	author = {Almeida, M. M. R.},
 	TITLE = {Avaliação de métodos de estimativa da capacidade de carga de fundações diretas em solos não saturados. \text{\normalfont\ 2018. 144 f}},
 	SCHOOL = {Programa de Pós-Graduação em Engenharia Civil: Geotecnia, Centro de Tecnologia,  Universidade Federal do Ceará},
 	YEAR = {2018},
@@ -50,7 +61,7 @@
 }
 
 @phdthesis{Gondim2017,
-	author = {GONDIM, D. R.},
+	author = {Gondim, D. R.},
 	TITLE = {Seleção de materiais com potencial aplicação na purificação de IgG humana. \text{\normalfont\ 2017. 164 f}},
 	SCHOOL = {Programa de Pós-Graduação em Engenharia Civil: Geotecnia, Centro de Tecnologia, Universidade Federal do Ceará},
 	YEAR = {2018},
@@ -62,7 +73,7 @@
 
 @article{mortalidade,
 	title={Mortalidade neonatal: fatores de risco em um município no sul do Brasil},
-	author={MARAM, E. and UCHIMURA, T. T.},
+	author={Maran, E. and Uchimura, T. T.},
 	journal={Rev. Eletr. Enf.},
 	volume={10},
 	number={1},
@@ -96,8 +107,8 @@
     ACCESSED = "2011 " # oct     }
 }
 
-@online{elat2015densidade,
-    author = {GRUPO{ }DE{ }{E}LETRICIDADE{ }{A}TMOSFÉRICA},
+@misc{elat2015densidade,
+    author = {{Grupo de Eletricidade Atmosférica}},
     title = {Densidade de descargas atmosféricas para a terra (Ng)},
     address = {Rio de Janeiro},
     number = {2},
@@ -112,8 +123,9 @@
 @estado{secretaria1999,
     author = {},
     booktitle={Entendendo o meio ambiente},
-    organization={SÃO PAULO {(Estado).}},
-    title={{\normalfont Secretaria do Meio Ambiente.} Tratados e organizações ambientais em matéria de meio ambiente},
+    organization={São Paulo \NoCaseChange{(Estado). Secretaria do Meio Ambiente}},
+    org-short={São Paulo},
+    title={Tratados e organizações ambientais em matéria de meio ambiente},
     url={http://www.bdt.org.br/sma/entendendo/atual.htm},
     urlaccessdate={8 mar. 2022},
     volume={1},
@@ -123,22 +135,22 @@
 }
 
 
-@book{NBR10520:2002,
+@book{NBR10520:2023,
     author = {},
     address={Rio de Janeiro},
-    month={out.},
-    organization={Associação{ }Brasileira{ }de{ }Normas{ }Técnicas},
-    org-short={Associação{ }Brasileira{ }de{ }Normas{ }Técnicas},
+    organization={Associação Brasileira de Normas Técnicas},
     title={{NBR} 10520},
-    subtitle={Informação e documentação: citações em documentos: apresentação},
-    year={2002},
+    subtitle={informação e documentação: citações em documentos: apresentação},
+    edition={2},
+    year={2023},
     publisher={ABNT}
 }
 
 @book{manuais1989,
     author = {},
     address={São Paulo},
-    organization={SÃO PAULO {(Estado). Secretaria do Meio Ambiente. Coordenadoria de Planejamento Ambiental}},
+    organization={São Paulo \NoCaseChange{(Estado). Secretaria do Meio Ambiente. Coordenadoria de Planejamento Ambiental}},
+    org-short={São Paulo},
     pages={48},
     title={Estudo de impacto ambiental – EIA, Relatório de impacto ambiental – RIMA},
     subtitle={manual de orientação},
@@ -148,7 +160,7 @@
 }
 
 @misc{UFC2012,
-author = {{U}niversidade{ }{F}ederal{ }do{ }{C}ear{\'a}},
+author = {{Universidade Federal do Ceará}},
 title = {Reitoria da {U}niversidade {F}ederal do {C}ear{\'a} },
 year = {2012},
 address={Fortaleza},
@@ -166,7 +178,7 @@ urlaccessdate = {28 jul. 2016}
 }
 
 @misc{NASA2016,
-author = { {A}dministra{\c{c}}{\~a}o{ }{N}acional{ }do{ }{E}spa{\c{c}}o{ }e{ }{A}eron{\'a}utica},
+author = {{Administração Nacional do Espaço e Aeronáutica}},
 title = {{G}ráfico{ }da{ }{a}tmosfera{ }{s}uperior },
 year = {2016},
 url = {http://www.nasa.gov/mission_pages/sunearth/science/upper-atmosphere-graphic.html},

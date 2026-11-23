@@ -1301,7 +1301,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Define o titulo no sumario do Apendice para nao negrito
-\newcommand{\apendice}[1]{\chapter{\hspace{-8pt}\uppercase{#1}}}
+\newcommand{\apendice}[1]{\chapter{\protect\MakeUppercase{#1}}}% ufcTex 2026: sem o recuo negativo que comia o espaço após o traço
 
 % O nome "APÊNDICES" nao deve vir em pagina distinta, redigido em letras maiusculas, centralizado, negritado, tamanho da fonte 12.
 %\newcommand{\imprimirpaginaapendices}{ %
@@ -1313,12 +1313,12 @@
 	%\clearpage}
 
 % Altera a fonte da letra titulo do apendice nao negrito
-\renewcommand{\chaptitlefont}{ %
-	\ifthenelse{\boolean{abntex@apendiceousecao}}{
-		\bfseries%\normalsize
-	}{
-		\ABNTEXchapterfont\ABNTEXchapterfontsize
-	}
+\renewcommand{\chaptitlefont}{%
+	\ifthenelse{\boolean{abntex@apendiceousecao}}{%
+		\bfseries%
+	}{%
+		\ABNTEXchapterfont\ABNTEXchapterfontsize%
+	}%
 }
 
 % Retira o negrito do apêndice e o coloca alinhado a esquerda
@@ -1337,26 +1337,24 @@
 %	}    
 %}
 
-\newcommand{\imprimirapendices}{ 
-	\imprimirpaginaapendices
+\newcommand{\imprimirapendices}{ % ufcTex 2026: sem folha de rosto de apêndices (comando comentado acima gerava erro)
 	\apendices %
 	% Coloca o negrito da palavra "Apêndice"
 	\PRIVATEapendiceconfig{\bfseries\apendicename}{\bfseries\apendicesname} %
 	}
 
 % Correcao do problema de espacamento entre as palavras
+% ufcTex 2026: sem espacos espurios; resultado "APÊNDICE A – TÍTULO"
 \renewcommand{\printchapternum}{%
-	\tocprintchapter
-	\setboolean{abntex@innonumchapter}{false}
+	\tocprintchapter%
+	\setboolean{abntex@innonumchapter}{false}%
 	\chapnumfont%
 	\ifthenelse{\boolean{abntex@apendiceousecao}}{%
-		\hspace{-0.3cm} %
-	}{}%
-	\space\thechapter\space%
-	\ifthenelse{\boolean{abntex@apendiceousecao}}{%
-		\tocinnonumchapter
-		~\textendash~%
-	}{} % else
+		\space\thechapter\space\textendash\space%
+		\tocinnonumchapter%
+	}{%
+		\thechapter\space%
+	}%
 }
 
 % Remove uppercase do apendice e anexos
@@ -1397,7 +1395,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Define o titulo no sumario do Anexo para nao negrito
-\newcommand{\anexo}[1]{\chapter{\hspace{-8pt}\uppercase{#1}}}
+\newcommand{\anexo}[1]{\chapter{\protect\MakeUppercase{#1}}}
 
 % O nome ANEXOS nao deve vir em pagina distinta, redigido em letras maiusculas, centralizado, negritado, tamanho da fonte 12.
 
@@ -1409,8 +1407,7 @@
 	%\end{vplace} %
 	%\clearpage}
 
-\newcommand{\imprimiranexos}{ %
-	\imprimirpaginaanexo
+\newcommand{\imprimiranexos}{ % ufcTex 2026: sem folha de rosto de anexos
 	\anexos %
 	% Retira o negrito da palavra "Apendice"
 	\PRIVATEapendiceconfig{\bfseries\anexoname}{\bfseries\anexosname} %
@@ -1476,3 +1473,12 @@
 %}%
 %}
 %\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ufcTex 2026: filete das notas de rodapé com 5 cm a partir da margem
+% esquerda (NBR 14724:2024, 5.2.1; guia de normalização da UFC).
+\renewcommand{\footnoterule}{\kern-3pt\hrule width 5cm height 0.4pt\kern2.6pt}
+
+% ufcTex 2026: indicativo de seção separado do título por um espaço
+% (NBR 6024:2012, 4.1 c; NBR 14724:2024, 5.2.2).
+\setsecnumformat{\csname the#1\endcsname\space}
